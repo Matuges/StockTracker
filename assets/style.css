@@ -1,9 +1,33 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+section {
+    background-color: rgb(226, 235, 235);
+    width: 90%;
+    display: flex;
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 2px black solid;
+    justify-content: center;
+}
+
 .products {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
 
 .products .product-container {
     margin: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: rgb(212, 212, 212);
+    border: solid 1px black;
+    padding: 5px;
+}
+
+.control div {
+    margin-bottom: 10px;
 }

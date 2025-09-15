@@ -7,24 +7,41 @@
     <link rel="stylesheet" href="..\assets\style.css">
 </head>
 <body>
+    <section>
+    <div class="control">
+        <div class="input-things">
+            <input type="text" name="" id="product-name" placeholder="Nome do produto">
+            <input type="text" name="" id="product-brand" placeholder="Marca do produto">
+            <input type="number" name="" id="product-price" placeholder="Preço do produto">
+            <button class="input">+</button>
+        </div>
 
-    <div>
-        <input type="text" name="" id="product-name" placeholder="Nome do produto">
-        <input type="text" name="" id="product-brand" placeholder="Nome do produto">
-        <input type="number" name="" id="product-price" placeholder="Nome do produto">
-        <button class="input">+</button>
+        <div class="filter-options">
+            <input type="text" name="" class="filterQuery" placeholder="filtro">
+            <button class="filterButton">Filtrar</button>
+        </div>
+
+        <div class="sorting-options">
+            <label for="sort-alfabetic">Ordenar por ordem alfabética</label>
+            <input type="radio" name="sorting" id="alfa">
+
+            <label for="sort-price">Ordenar por preço ascendente</label>
+            <input type="radio" name="sorting" id="price-ac">
+
+            <label for="sort-price">Ordenar por preço descendente</label>
+            <input type="radio" name="sorting" id="price-dc">
+
+            <button class="sort">Ordenar</button>
+        </div>
     </div>
+    </section>
 
+    <section>
     <div class="products">
 
     </div>
-
-    <div id="0">
-        <div class="name"></div>
-        <div class="brand"></div>
-        <div class="price"></div>
-    </div>
-
+    </section>
+  
 
     <script src="..\js\classes.js"></script>
     <script src="..\js\script.js"></script>
