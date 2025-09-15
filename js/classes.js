@@ -1,10 +1,15 @@
-class Product {
+let productIdCouter = 0
+let productsData = []
 
+
+class Product {
+    
     stock = 0
 
-    constructor (productName, ProductBrand, ProductPrice) {
+    constructor (productName, productBrand, productPrice) {
         this.productName = productName
-        this.ProductBrand = ProductBrand
-        this.ProductPrice = ProductPrice
+        this.productBrand = productBrand
+        this.productPrice = productPrice
     }
 }
+ 
