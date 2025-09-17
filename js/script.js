@@ -115,13 +115,13 @@ function del(productId) {
 
 function editProduct (productId) {
     const productToEdit = productsData.find(product => product.id === productId)
-
     const productElement = document.getElementById(productId)
-
+    const unchangedName = productToEdit.name
+    productElement.draggable = false
     productElement.innerHTML =
     `
         <div class = "product-actions"> 
-        <button class = "save" onclick="saveEditedProduct(${productId})">Salvar</button>
+        <button class = "save" onclick="saveEditedProduct(${productId}, '${unchangedName}')">Salvar</button>
         <button class = "cancel" onclick="cancelEditedProduct(${productId})">Cancelar</button>
 
         <button class="remove push" onclick="del(${productId})">X</button>
@@ -131,12 +131,13 @@ function editProduct (productId) {
         <input type="number" class="edit-price" value="${productToEdit.price}">
         <input type="number" class="edit-stock" value="${productToEdit.stock}">
     `
+
 }
 
 function cancelEditedProduct(productId) {
     const product = productsData.find(product => product.id === productId)
     const productElement = document.getElementById(productId)
-
+    productElement.draggable = true
     productElement.innerHTML =`
         <div class = "product-actions"> 
         <button class = "edit" onclick="editProduct(${product.id})">Editar</button>
@@ -154,19 +155,19 @@ function cancelEditedProduct(productId) {
     `
 }
 
-function saveEditedProduct (productId) {
+function saveEditedProduct (productId, unchangedName) {
     const productElement = document.getElementById(productId)
-
+    productElement.draggable = true
     const newName = productElement.querySelector(".edit-name").value.toUpperCase()
     const newBrand = productElement.querySelector(".edit-brand").value.toUpperCase()
     const newPrice = parseFloat(productElement.querySelector(".edit-price").value)
     const newStock = parseInt(productElement.querySelector(".edit-stock").value)
 
     const productIsOnList = productsData.some(product => {
-            return product.name.toLowerCase() === newName.toLowerCase()
+            return product.name.toLowerCase() !== newName.toLowerCase() || product.name.toLowerCase() === unchangedName
         })
-
-        if (!productIsOnList) {
+        
+        if (productIsOnList) {
     const productToUpdate = productsData.find(product => product.id === productId)
     productToUpdate.name = newName
     productToUpdate.brand = newBrand
@@ -304,22 +305,22 @@ function handleDragDrop (e) {
     }
 
     const targetElement = e.target.closest('.product-container')
-    if (!targetElement || targetElement.id === draggedProductId){
+    if (!targetElement || Number(targetElement.id) === Number(draggedProductId)){
         console.log ("teste")
         return
     }
 
     const droppedOnProductId = targetElement.id
 
-    const draggedProductIndex = productsData.findIndex(p => p.id === draggedProductId)
-    const droppedOnProductIndex = productsData.findIndex(p => p.id === droppedOnProductId)
+    const draggedProductIndex = productsData.findIndex(p => p.id === Number(draggedProductId))
+    const droppedOnProductIndex = productsData.findIndex(p => p.id === Number(droppedOnProductId))
 
     const [draggedProduct] = productsData.splice(draggedProductIndex, 1)
     productsData.splice(droppedOnProductIndex, 0, draggedProduct)
     document.querySelector(".products").innerHTML = "";
     productsData.forEach(product => renderProductElement(product))
     saveProductsToLocalStorage();
-    console.log ("dragconfirm")
+    console.log (droppedOnProductId)
 
 }
 
@@ -356,4 +357,4 @@ function subtractStock (productId) {
 }
 
 
-window.addEventListener('load', loadProductsFromLocalStorage, sort) 
+window.addEventListener('load', loadProductsFromLocalStorage) 
