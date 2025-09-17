@@ -8,6 +8,13 @@ function newProduct() {
     let brand = document.querySelector('#product-brand').value
     let price = document.querySelector('#product-price').value 
     let stock = 0
+
+    const productIsOnList = productsData.some(product => {
+            return product.name.toLowerCase() === name.toLowerCase()
+        })
+     
+    if (!productIsOnList) {
+    
     if (name && brand && price){
 
     const newProductObject = {
@@ -17,6 +24,8 @@ function newProduct() {
         price: price,
         stock: stock
     }
+
+
 
     document.querySelector('#product-name').value = ''
     document.querySelector('#product-brand').value = ''
@@ -30,6 +39,8 @@ function newProduct() {
 
     productIdCouter ++
     } else window.alert("Preencha todos os campos antes de adicionar!")
+
+    } else window.alert("Produto já está catalogado")
 }   
 
 // MOSTRA NA TELA
@@ -293,13 +304,16 @@ function plusStock (productId) {
 
 function subtractStock (productId) {
     const productToAdd = productsData.find(product => product.id === productId)
-    const element = document.getElementById(`${productId}`)
-    const stockElement = element.querySelector(".stock")
 
-    productToAdd.stock --
-    stockElement.innerHTML = `ESTOQUE: ${productToAdd.stock}`
-    saveProductsToLocalStorage()
-    
+    if (productToAdd.stock > 0) {
+        const element = document.getElementById(`${productId}`)
+        const stockElement = element.querySelector(".stock")
+        
+        productToAdd.stock --
+        stockElement.innerHTML = `ESTOQUE: ${productToAdd.stock}`
+        saveProductsToLocalStorage()
+    } else window.alert("Não pode ter estoque negativo")
 }
+
 
 window.addEventListener('load', loadProductsFromLocalStorage) 
