@@ -26,8 +26,49 @@ section {
     background-color: rgb(212, 212, 212);
     border: solid 1px black;
     padding: 5px;
+    cursor: grab; /* Indica que o elemento é arrastável */
+    transition: all 0.2s ease-in-out
+    
 }
 
 .control div {
     margin-bottom: 10px;
+}
+
+.product-container.dragging {
+    opacity: 0.5; /* Elemento arrastado fica semitransparente */
+    border: 2px dashed #333;
+}
+
+.product-container.drag-over {
+    border: 2px solid #007bff; /* Elemento sob o mouse ganha uma borda azul */
+    background-color: #e6f2ff;
+}
+
+.product-actions {
+    display: flex;
+    
+}
+
+.push {
+    margin-left: auto;
+}
+
+.stock-control {
+    margin-left: 5px;
+}
+
+.stock-control button {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    text-align: center;
+}
+
+.stock-control .plus-stock  {
+    background-color: green;
+}
+
+.stock-control .subtraction-stock  {
+    background-color: rgb(255, 0, 0);
 }
