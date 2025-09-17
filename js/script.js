@@ -2,11 +2,16 @@ document.querySelector('.input').addEventListener("click", newProduct)
 
 
 // CRIA O PRODUTO JOGA NO ARRAY E SALVA O ARRAY NO LOCALSTORAGE
+
+function formatPrice(price) {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+}
+
 function newProduct() {
     
-    let name = document.querySelector('#product-name').value
-    let brand = document.querySelector('#product-brand').value
-    let price = document.querySelector('#product-price').value 
+    let name = document.querySelector('#product-name').value.toUpperCase()
+    let brand = document.querySelector('#product-brand').value.toUpperCase()
+    let price = parseFloat(document.querySelector('#product-price').value)
     let stock = 0
 
     const productIsOnList = productsData.some(product => {
@@ -62,7 +67,7 @@ function renderProductElement(product) {
         </div>
         <div class="name"> NOME DO PRODUTO: ${product.name}</div>
         <div class="brand">MARCA DO PRODUTO: ${product.brand}</div>
-        <div class="price">PREÇO DO PRODUTO: R$${product.price}</div>
+        <div class="price">PREÇO DO PRODUTO: ${formatPrice(product.price)}</div>
         <div class="stock">ESTOQUE: ${product.stock}</div>
     `
     document.querySelector(".products").appendChild(div)
@@ -117,6 +122,7 @@ function editProduct (productId) {
     `
         <div class = "product-actions"> 
         <button class = "save" onclick="saveEditedProduct(${productId})">Salvar</button>
+        <button class = "cancel" onclick="cancelEditedProduct(${productId})">Cancelar</button>
 
         <button class="remove push" onclick="del(${productId})">X</button>
         </div>
@@ -127,14 +133,40 @@ function editProduct (productId) {
     `
 }
 
+function cancelEditedProduct(productId) {
+    const product = productsData.find(product => product.id === productId)
+    const productElement = document.getElementById(productId)
+
+    productElement.innerHTML =`
+        <div class = "product-actions"> 
+        <button class = "edit" onclick="editProduct(${product.id})">Editar</button>
+        <div class = "stock-control"> 
+            <button class= "plus-stock" onclick="plusStock(${product.id})">+</button>
+            <button class= "subtraction-stock" onclick="subtractStock(${product.id})">-</button>
+        </div>
+        <button class="remove push" onclick="del(${product.id})">X</button>
+
+        </div>
+        <div class="name"> NOME DO PRODUTO: ${product.name}</div>
+        <div class="brand">MARCA DO PRODUTO: ${product.brand}</div>
+        <div class="price">PREÇO DO PRODUTO: ${formatPrice(product.price)}</div>
+        <div class="stock">ESTOQUE: ${product.stock}</div>
+    `
+}
+
 function saveEditedProduct (productId) {
     const productElement = document.getElementById(productId)
 
-    const newName = productElement.querySelector(".edit-name").value
-    const newBrand = productElement.querySelector(".edit-brand").value
-    const newPrice = productElement.querySelector(".edit-price").value
-    const newStock = productElement.querySelector(".edit-stock").value
+    const newName = productElement.querySelector(".edit-name").value.toUpperCase()
+    const newBrand = productElement.querySelector(".edit-brand").value.toUpperCase()
+    const newPrice = parseFloat(productElement.querySelector(".edit-price").value)
+    const newStock = parseInt(productElement.querySelector(".edit-stock").value)
 
+    const productIsOnList = productsData.some(product => {
+            return product.name.toLowerCase() === newName.toLowerCase()
+        })
+
+        if (!productIsOnList) {
     const productToUpdate = productsData.find(product => product.id === productId)
     productToUpdate.name = newName
     productToUpdate.brand = newBrand
@@ -156,13 +188,17 @@ function saveEditedProduct (productId) {
         </div>
         <div class="name">NOME DO PRODUTO: ${productToUpdate.name}</div>
         <div class="brand">MARCA DO PRODUTO: ${productToUpdate.brand}</div>
-        <div class="price">PREÇO DO PRODUTO: R$${productToUpdate.price}</div>
+        <div class="price">PREÇO DO PRODUTO: ${formatPrice(productToUpdate.price)}</div>
         <div class="stock">ESTOQUE: ${productToUpdate.stock}</div>
     `;
+        } else window.alert("Já exite um produto com esse nome")
 }
 
 
-document.querySelector(".filterButton").addEventListener("click", filter)
+document.querySelector(".filterQuery").addEventListener("input", filter)
+document.querySelectorAll('input[name="filter"]').forEach(radio => {
+    radio.addEventListener("change", filter)
+})
 
 function filter() {
     let query = document.querySelector(".filterQuery").value
@@ -197,7 +233,9 @@ function filter() {
     }
 }
 
-document.querySelector(".sort").addEventListener("click", sort)
+document.querySelectorAll('input[name="sorting"]').forEach(radio => {
+    radio.addEventListener("change", sort)
+})
 
 function sort () {
     const sortOption = document.querySelector('input[name="sorting"]:checked')
@@ -218,6 +256,8 @@ function sort () {
         productsData.forEach(product => {
             renderProductElement(product)
         })
+
+        saveProductsToLocalStorage()
     } else {
         window.alert ("você não selecionou nenhuma opção")
     }
@@ -316,4 +356,4 @@ function subtractStock (productId) {
 }
 
 
-window.addEventListener('load', loadProductsFromLocalStorage) 
+window.addEventListener('load', loadProductsFromLocalStorage, sort) 
